@@ -1,0 +1,113 @@
+MOVINGMNIST:
+  DISTRACTOR_NUM: 0
+  VELOCITY_LOWER: 0.0
+  VELOCITY_UPPER: 3.6
+  SCALE_VARIATION_LOWER: 0.9090909090909091
+  SCALE_VARIATION_UPPER: 1.1
+  ROTATION_LOWER: -30
+  ROTATION_UPPER: 30
+  ILLUMINATION_LOWER: 0.6
+  ILLUMINATION_UPPER: 1.0
+  DIGIT_NUM: 3
+  IN_LEN: 10
+  OUT_LEN: 10
+  TESTING_LEN: 20
+  IMG_SIZE: 64
+  TEST_FILE: /Users/mustafa/Desktop/PhD/TIK/TAC3/azure/Codes/HKO-7_copy/mnist_data/movingmnist_10000_nodistr.npz
+MODEL:
+  RESUME: false
+  TESTING: false
+  LOAD_DIR: ''
+  LOAD_ITER: 79999
+  SAVE_DIR: trajgru_L5
+  CNN_ACT_TYPE: leaky
+  RNN_ACT_TYPE: leaky
+  FRAME_STACK: 1
+  FRAME_SKIP: 1
+  IN_LEN: 10
+  OUT_LEN: 10
+  OUT_TYPE: direct
+  NORMAL_LOSS_GLOBAL_SCALE: 5.0e-05
+  USE_BALANCED_LOSS: true
+  TEMPORAL_WEIGHT_TYPE: same
+  TEMPORAL_WEIGHT_UPPER: 5
+  L1_LAMBDA: 1.0
+  L2_LAMBDA: 1.0
+  GDL_LAMBDA: 0.0
+  USE_SEASONALITY: false
+  TRAJRNN:
+    INIT_GRID: true
+    FLOW_LR_MULT: 1.0
+    SAVE_MID_RESULTS: false
+  ENCODER_FORECASTER:
+    HAS_MASK: false
+    FEATMAP_SIZE: [64, 32, 16]
+    FIRST_CONV: [16, 3, 1, 1]
+    LAST_DECONV: [16, 3, 1, 1]
+    DOWNSAMPLE:
+    - [3, 2, 1]
+    - [3, 2, 1]
+    UPSAMPLE:
+    - [4, 2, 1]
+    - [4, 2, 1]
+    RNN_BLOCKS:
+      RES_CONNECTION: true
+      LAYER_TYPE: [TrajGRU, TrajGRU, TrajGRU]
+      STACK_NUM: [1, 1, 1]
+      NUM_FILTER: [64, 96, 96]
+      H2H_KERNEL:
+      - [5, 5]
+      - [5, 5]
+      - [5, 5]
+      H2H_DILATE:
+      - [1, 1]
+      - [1, 1]
+      - [1, 1]
+      I2H_KERNEL:
+      - [3, 3]
+      - [3, 3]
+      - [3, 3]
+      I2H_PAD:
+      - [1, 1]
+      - [1, 1]
+      - [1, 1]
+      L: [5, 5, 5]
+  DECONVBASELINE:
+    BASE_NUM_FILTER: 16
+    USE_3D: true
+    ENCODER: separate
+    BN: true
+    BN_GLOBAL_STATS: false
+    COMPAT:
+      CONV_INSTEADOF_FC_IN_ENCODER: false
+    FC_BETWEEN_ENCDEC: 0
+  TRAIN:
+    BATCH_SIZE: 4
+    TBPTT: false
+    OPTIMIZER: adam
+    LR: 0.0001
+    GAMMA1: 0.9
+    BETA1: 0.5
+    EPS: 1.0e-08
+    MIN_LR: 1.0e-06
+    GRAD_CLIP: 1.0
+    WD: 0
+    MAX_ITER: 200000
+    LR_DECAY_ITER: 20000
+    LR_DECAY_FACTOR: 0.7
+  VALID_ITER: 5000
+  SAVE_ITER: 20000
+  TEST:
+    FINETUNE: true
+    MAX_ITER: 1
+    MODE: online
+    DISABLE_TBPTT: true
+    ONLINE:
+      OPTIMIZER: adam
+      LR: 1.0e-06
+      FINETUNE_MIN_MSE: 0.0
+      GAMMA1: 0.9
+      BETA1: 0.5
+      EPS: 1.0e-08
+      GRAD_CLIP: 10.0
+      WD: 0
